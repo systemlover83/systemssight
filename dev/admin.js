@@ -105,7 +105,8 @@ function extractConfig(jsText) {
       typewriterBio: { ...d.features.typewriterBio, ...c.features?.typewriterBio },
       customCursor: { ...d.features.customCursor, ...c.features?.customCursor },
       particleBackground: { ...d.features.particleBackground, ...c.features?.particleBackground },
-      viewCounter: { ...d.features.viewCounter, ...c.features?.viewCounter }
+      viewCounter: { ...d.features.viewCounter, ...c.features?.viewCounter },
+      pageLock: { ...d.features.pageLock, ...c.features?.pageLock }
     }
   };
 }
@@ -126,7 +127,8 @@ function defaultState() {
       typewriterBio: { enabled: true },
       customCursor: { enabled: true },
       particleBackground: { enabled: true },
-      viewCounter: { enabled: true, namespace: 'systemlover-xyz-page' }
+      viewCounter: { enabled: true, namespace: 'systemlover-xyz-page' },
+      pageLock: { enabled: false, passwordHash: '' }
     }
   };
 }
@@ -157,6 +159,11 @@ function populateForm(s) {
   document.getElementById('f-music-title').value = s.features.musicPlayer.title;
   document.getElementById('music-current').textContent = 'current: ' + s.features.musicPlayer.track;
   toggleMusicFields();
+
+  document.getElementById('f-lock-enabled').checked = s.features.pageLock.enabled;
+  document.getElementById('lock-status').textContent = s.features.pageLock.passwordHash
+    ? 'a password is currently set.' : 'no password set yet.';
+  toggleLockFields();
 }
 
 function resolveAssetUrl(path) {
@@ -174,6 +181,11 @@ document.getElementById('f-music-enabled').addEventListener('change', toggleMusi
 function toggleMusicFields() {
   document.getElementById('music-fields').style.display =
     document.getElementById('f-music-enabled').checked ? 'block' : 'none';
+}
+document.getElementById('f-lock-enabled').addEventListener('change', toggleLockFields);
+function toggleLockFields() {
+  document.getElementById('lock-fields').style.display =
+    document.getElementById('f-lock-enabled').checked ? 'block' : 'none';
 }
 
 document.getElementById('f-avatar-file').addEventListener('change', (e) => {
@@ -275,6 +287,8 @@ function collectSimpleFields() {
   state.features.viewCounter.enabled = document.getElementById('f-viewcounter').checked;
   state.features.musicPlayer.enabled = document.getElementById('f-music-enabled').checked;
   state.features.musicPlayer.title = document.getElementById('f-music-title').value;
+
+  state.features.pageLock.enabled = document.getElementById('f-lock-enabled').checked;
 }
 
 /* ---------------- GitHub Contents API ---------------- */
@@ -363,10 +377,35 @@ ${custom}
     typewriterBio: { enabled: ${s.features.typewriterBio.enabled} },
     customCursor: { enabled: ${s.features.customCursor.enabled} },
     particleBackground: { enabled: ${s.features.particleBackground.enabled} },
-    viewCounter: { enabled: ${s.features.viewCounter.enabled}, namespace: ${JSON.stringify(s.features.viewCounter.namespace)} }
+    viewCounter: { enabled: ${s.features.viewCounter.enabled}, namespace: ${JSON.stringify(s.features.viewCounter.namespace)} },
+    pageLock: { enabled: ${s.features.pageLock.enabled}, passwordHash: ${JSON.stringify(s.features.pageLock.passwordHash)} }
   }
 };
 `;
+}
+
+/* ---------------- keep social-embed meta tags in sync ---------------- */
+function buildUpdatedIndexHtml(html, s) {
+  const title = escapeHtmlText(s.profile.displayName || 'systemlover');
+  const desc = escapeHtmlText(s.profile.bio || '');
+  const imageUrl = s.profile.avatar.startsWith('http')
+    ? s.profile.avatar
+    : `https://systemlover.xyz/${s.profile.avatar}`;
+
+  return html
+    .replace(/<title>.*?<\/title>/, `<title>${title}</title>`)
+    .replace(/(<meta name="description" content=")[^"]*(")/, `$1${desc}$2`)
+    .replace(/(<meta property="og:title" content=")[^"]*(")/, `$1${title}$2`)
+    .replace(/(<meta property="og:description" content=")[^"]*(")/, `$1${desc}$2`)
+    .replace(/(<meta property="og:image" content=")[^"]*(")/, `$1${imageUrl}$2`)
+    .replace(/(<meta name="twitter:title" content=")[^"]*(")/, `$1${title}$2`)
+    .replace(/(<meta name="twitter:description" content=")[^"]*(")/, `$1${desc}$2`)
+    .replace(/(<meta name="twitter:image" content=")[^"]*(")/, `$1${imageUrl}$2`)
+    .replace(/(<meta name="theme-color" content=")[^"]*(")/, `$1${s.theme.accent}$2`);
+}
+
+function escapeHtmlText(str) {
+  return String(str).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 }
 
 /* ---------------- publish ---------------- */
@@ -381,6 +420,12 @@ document.getElementById('btn-publish').addEventListener('click', async () => {
 
   try {
     collectSimpleFields();
+
+    const newPassword = document.getElementById('f-lock-password').value;
+    if (newPassword) {
+      state.features.pageLock.passwordHash = await sha256Hex(newPassword);
+      document.getElementById('f-lock-password').value = '';
+    }
 
     if (pendingFiles.avatar) {
       log.textContent = 'uploading avatar…';
@@ -408,7 +453,17 @@ document.getElementById('btn-publish').addEventListener('click', async () => {
     const text = buildConfigJsText(state);
     await ghPutFile('config.js', b64EncodeUnicode(text), 'dev: update profile config');
 
+    log.textContent = 'syncing link preview…';
+    const currentHtmlRes = await fetch(RAW_BASE + 'index.html?_=' + Date.now());
+    const currentHtml = await currentHtmlRes.text();
+    const updatedHtml = buildUpdatedIndexHtml(currentHtml, state);
+    if (updatedHtml !== currentHtml) {
+      await ghPutFile('index.html', b64EncodeUnicode(updatedHtml), 'dev: sync link preview');
+    }
+
     pendingFiles = { avatar: null, backgroundMedia: null, musicTrack: null };
+    document.getElementById('lock-status').textContent = state.features.pageLock.passwordHash
+      ? 'a password is currently set.' : 'no password set yet.';
     setStatus('published. live site will update in under a minute.', 'ok');
     log.textContent = '';
   } catch (err) {

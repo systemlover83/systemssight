@@ -42,6 +42,8 @@ const CONFIG = {
     typewriterBio: { enabled: true },
     customCursor: { enabled: true },
     particleBackground: { enabled: true },
-    viewCounter: { enabled: true, namespace: "systemlover-xyz-page" }
+    viewCounter: { enabled: true, namespace: "systemlover-xyz-page" },
+    // Requires a password before the page shows. Set/change via /dev.
+    pageLock: { enabled: false, passwordHash: "" }
   }
 };

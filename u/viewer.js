@@ -25,7 +25,6 @@
   }
 
   document.title = data.config.profile?.displayName || username;
-  document.getElementById('page-content').hidden = false;
   renderPage(data.config);
 })();
 

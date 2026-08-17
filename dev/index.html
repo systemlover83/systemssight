@@ -121,6 +121,16 @@
     </div>
   </section>
 
+  <section class="panel">
+    <h2>Page lock</h2>
+    <label class="toggle-row"><input id="f-lock-enabled" type="checkbox"> Require a password to view the page</label>
+    <div id="lock-fields" class="indent">
+      <label>New password</label>
+      <input id="f-lock-password" type="text" placeholder="leave blank to keep current password" autocomplete="off">
+      <p id="lock-status" class="dim"></p>
+    </div>
+  </section>
+
   <button id="btn-publish" class="btn-primary">save & publish</button>
   <p id="publish-log" class="dim"></p>
 </div>

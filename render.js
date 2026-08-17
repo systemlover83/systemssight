@@ -32,13 +32,56 @@ const PRESET_SOCIAL_URL = {
 };
 
 function renderPage(CONFIG) {
-  applyTheme(CONFIG);
-  renderProfile(CONFIG);
-  renderSocials(CONFIG);
-  initBackground(CONFIG);
-  initMusicPlayer(CONFIG);
-  initCustomCursor(CONFIG);
-  initViewCounter(CONFIG);
+  const content = document.getElementById('page-content');
+  const lock = CONFIG.features.pageLock;
+
+  const reveal = () => {
+    if (content) content.hidden = false;
+    applyTheme(CONFIG);
+    renderProfile(CONFIG);
+    renderSocials(CONFIG);
+    initBackground(CONFIG);
+    initMusicPlayer(CONFIG);
+    initCustomCursor(CONFIG);
+    initViewCounter(CONFIG);
+  };
+
+  if (lock?.enabled && lock.passwordHash) {
+    if (content) content.hidden = true;
+    initPageLock(CONFIG, reveal);
+  } else {
+    reveal();
+  }
+}
+
+async function sha256Hex(text) {
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text));
+  return [...new Uint8Array(buf)].map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+function initPageLock(CONFIG, onUnlock) {
+  const gate = document.getElementById('lock-gate');
+  if (!gate) { onUnlock(); return; }
+
+  const sessionKey = 'unlocked:' + (CONFIG.profile.handle || CONFIG.profile.displayName || 'page');
+  if (sessionStorage.getItem(sessionKey) === '1') {
+    onUnlock();
+    return;
+  }
+
+  gate.hidden = false;
+  document.getElementById('lock-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const val = document.getElementById('lock-input').value;
+    const hash = await sha256Hex(val);
+    if (hash === CONFIG.features.pageLock.passwordHash) {
+      sessionStorage.setItem(sessionKey, '1');
+      gate.hidden = true;
+      onUnlock();
+    } else {
+      document.getElementById('lock-error').hidden = false;
+    }
+  });
 }
 
 function applyTheme(CONFIG) {
@@ -235,12 +278,20 @@ function initCustomCursor(CONFIG) {
   let mx = -100, my = -100;
   let rx = mx, ry = my;
 
+  const reduced = prefersReducedMotion();
+  let lastSpark = 0;
+
   window.addEventListener('mousemove', (e) => {
     mx = e.clientX; my = e.clientY;
     dot.style.left = `${mx}px`;
     dot.style.top = `${my}px`;
     const el = document.elementFromPoint(mx, my);
     ring.classList.toggle('hover', !!(el && el.closest('a,button,.social-btn')));
+
+    if (!reduced && e.timeStamp - lastSpark > 45) {
+      lastSpark = e.timeStamp;
+      spawnCursorSpark(mx, my);
+    }
   });
 
   function loop() {
@@ -251,6 +302,15 @@ function initCustomCursor(CONFIG) {
     requestAnimationFrame(loop);
   }
   loop();
+}
+
+function spawnCursorSpark(x, y) {
+  const spark = document.createElement('div');
+  spark.className = 'cursor-spark';
+  spark.style.left = `${x}px`;
+  spark.style.top = `${y}px`;
+  document.body.appendChild(spark);
+  spark.addEventListener('animationend', () => spark.remove());
 }
 
 /* ---------------- view counter ---------------- */

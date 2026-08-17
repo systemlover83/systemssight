@@ -33,7 +33,8 @@ function defaultProfileConfig(username) {
       typewriterBio: { enabled: true },
       customCursor: { enabled: true },
       particleBackground: { enabled: true },
-      viewCounter: { enabled: false, namespace: 'user-' + username }
+      viewCounter: { enabled: false, namespace: 'user-' + username },
+      pageLock: { enabled: false, passwordHash: '' }
     }
   };
 }

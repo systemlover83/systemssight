@@ -12,6 +12,16 @@
 </head>
 <body>
 
+<div id="lock-gate" class="lock-gate" hidden>
+  <form id="lock-form" class="lock-box">
+    <h1 id="lock-title">locked</h1>
+    <p class="dim">enter password to view this page</p>
+    <input id="lock-input" type="password" autocomplete="off" autofocus>
+    <button type="submit">unlock</button>
+    <p id="lock-error" class="lock-error" hidden>wrong password</p>
+  </form>
+</div>
+
 <div id="not-found" class="center-shell" hidden style="min-height:100vh;display:flex;align-items:center;justify-content:center;">
   <div style="text-align:center;color:#9ca0ad;font-family:system-ui,sans-serif;">
     <h1 style="color:#f4f4f7;">user not found</h1>
