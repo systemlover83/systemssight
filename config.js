@@ -21,7 +21,7 @@ const CONFIG = {
     accent2: "#000000",
     backgroundType: "video",
     backgroundMedia: "assets/bg.mp4",
-    introAnimation: "fade"
+    introAnimation: "glitch"
   },
 
   socials: {
