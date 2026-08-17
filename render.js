@@ -37,6 +37,7 @@ function renderPage(CONFIG) {
 
   const reveal = () => {
     if (content) content.hidden = false;
+    applyIntroAnimation(CONFIG);
     applyTheme(CONFIG);
     renderProfile(CONFIG);
     renderSocials(CONFIG);
@@ -88,6 +89,19 @@ function applyTheme(CONFIG) {
   const r = document.documentElement.style;
   r.setProperty('--accent', CONFIG.theme.accent);
   r.setProperty('--accent2', CONFIG.theme.accent2);
+}
+
+const INTRO_ANIMATIONS = ['fade', 'slide-up', 'slide-down', 'zoom', 'flip', 'glitch', 'blur', 'wipe'];
+
+function applyIntroAnimation(CONFIG) {
+  const card = document.querySelector('.card');
+  if (!card) return;
+  const choice = INTRO_ANIMATIONS.includes(CONFIG.theme.introAnimation) ? CONFIG.theme.introAnimation : 'fade';
+  INTRO_ANIMATIONS.forEach(a => card.classList.remove('intro-' + a));
+  if (prefersReducedMotion()) return;
+  // restart the animation even if the same class was already present
+  void card.offsetWidth;
+  card.classList.add('intro-' + choice);
 }
 
 function renderProfile(CONFIG) {

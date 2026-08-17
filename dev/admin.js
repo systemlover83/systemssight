@@ -114,7 +114,7 @@ function extractConfig(jsText) {
 function defaultState() {
   return {
     profile: { displayName: '', handle: '', bio: '', avatar: 'assets/avatar-placeholder.svg', badges: [] },
-    theme: { accent: '#a855f7', accent2: '#22d3ee', backgroundType: 'particles', backgroundMedia: '' },
+    theme: { accent: '#a855f7', accent2: '#22d3ee', backgroundType: 'particles', backgroundMedia: '', introAnimation: 'fade' },
     socials: {
       discord: { enabled: false, value: '' }, twitter: { enabled: false, value: '' },
       instagram: { enabled: false, value: '' }, tiktok: { enabled: false, value: '' },
@@ -147,6 +147,7 @@ function populateForm(s) {
   toggleBgMediaRow();
   document.getElementById('bg-media-current').textContent = s.theme.backgroundMedia
     ? 'current: ' + s.theme.backgroundMedia : 'no file set';
+  document.getElementById('f-introAnim').value = s.theme.introAnimation;
 
   renderSocialPresets();
   renderCustomLinks();
@@ -280,6 +281,7 @@ function collectSimpleFields() {
   state.theme.accent = document.getElementById('f-accent').value;
   state.theme.accent2 = document.getElementById('f-accent2').value;
   state.theme.backgroundType = document.getElementById('f-bgType').value;
+  state.theme.introAnimation = document.getElementById('f-introAnim').value;
 
   state.features.typewriterBio.enabled = document.getElementById('f-typewriter').checked;
   state.features.customCursor.enabled = document.getElementById('f-cursor').checked;
@@ -361,7 +363,8 @@ ${badges}
     accent: ${JSON.stringify(s.theme.accent)},
     accent2: ${JSON.stringify(s.theme.accent2)},
     backgroundType: ${JSON.stringify(s.theme.backgroundType)},
-    backgroundMedia: ${JSON.stringify(s.theme.backgroundMedia)}
+    backgroundMedia: ${JSON.stringify(s.theme.backgroundMedia)},
+    introAnimation: ${JSON.stringify(s.theme.introAnimation)}
   },
 
   socials: {

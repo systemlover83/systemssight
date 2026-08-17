@@ -15,7 +15,8 @@ function defaultProfileConfig(username) {
       accent: '#a855f7',
       accent2: '#22d3ee',
       backgroundType: 'particles',
-      backgroundMedia: ''
+      backgroundMedia: '',
+      introAnimation: 'fade'
     },
     socials: {
       discord: { enabled: false, value: '' },
