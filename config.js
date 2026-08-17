@@ -11,8 +11,7 @@ const CONFIG = {
     bio: "just the goat lowkey ",
     avatar: "assets/avatar.jpg",
     badges: [
-      { icon: "⚡", label: "owner" },
-      { icon: "🤝", label: "Discord Verified" }
+
     ]
   },
 
@@ -25,7 +24,7 @@ const CONFIG = {
   },
 
   socials: {
-    discord   : { enabled: true, value: "System.mp3" },
+    discord   : { enabled: false, value: "System.mp3" },
     twitter   : { enabled: false, value: "" },
     instagram : { enabled: false, value: "" },
     tiktok    : { enabled: false, value: "" },
