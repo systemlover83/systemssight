@@ -19,7 +19,8 @@ const CONFIG = {
     accent: "#4dff00",
     accent2: "#000000",
     backgroundType: "video",
-    backgroundMedia: "assets/bg.mp4"
+    backgroundMedia: "assets/bg.mp4",
+    introAnimation: "fade"
   },
 
   socials: {
