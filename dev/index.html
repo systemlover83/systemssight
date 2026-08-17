@@ -158,18 +158,13 @@
 
   <div id="tab-visitors" class="tab-content" hidden>
     <section class="panel">
-      <h2>Visitors</h2>
-      <p class="dim">IP, browser, and page logged on each visit to systemlover.xyz. Click a row's "locate" to look up its rough location on demand.</p>
-      <button id="btn-refresh-visitors" class="btn-secondary">refresh</button>
-      <p id="visitors-status" class="dim"></p>
-      <div class="visitor-table-wrap">
-        <table id="visitor-table" class="visitor-table" hidden>
-          <thead>
-            <tr><th>when</th><th>ip</th><th>page</th><th>browser</th><th></th></tr>
-          </thead>
-          <tbody id="visitor-tbody"></tbody>
-        </table>
+      <div class="visitors-header">
+        <h2>Visitors</h2>
+        <button id="btn-refresh-visitors" class="btn-secondary">refresh</button>
       </div>
+      <p class="dim">Logged on each visit to systemlover.xyz. Click "locate" on any entry for a rough location.</p>
+      <p id="visitors-status" class="dim"></p>
+      <div id="visitor-list" class="visitor-list"></div>
     </section>
   </div>
 </div>

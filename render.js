@@ -372,12 +372,69 @@ async function logVisit(CONFIG) {
   try {
     const res = await fetch('https://api.ipify.org?format=json');
     const { ip } = await res.json();
+    const { device, browser } = parseDeviceAndBrowser(navigator.userAgent);
     await supabaseClient.from('visitor_logs').insert({
-      ip, user_agent: navigator.userAgent, page: location.pathname
+      ip,
+      user_agent: navigator.userAgent,
+      page: location.pathname,
+      referrer: parseReferrer(),
+      device,
+      browser,
+      screen: `${window.screen.width}x${window.screen.height}`,
+      language: navigator.language || '',
+      timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || '',
+      visit_count: nextVisitCount()
     });
   } catch (err) {
     // never let logging break the page
   }
+}
+
+function parseDeviceAndBrowser(ua) {
+  let device = 'Desktop';
+  if (/iPad/.test(ua)) device = 'iPad';
+  else if (/iPhone/.test(ua)) device = 'iPhone';
+  else if (/Android/.test(ua) && /Mobile/.test(ua)) device = 'Android phone';
+  else if (/Android/.test(ua)) device = 'Android tablet';
+  else if (/Macintosh/.test(ua)) device = 'Mac';
+  else if (/Windows/.test(ua)) device = 'Windows PC';
+  else if (/Linux/.test(ua)) device = 'Linux PC';
+
+  let browser = 'Unknown browser';
+  if (/Edg\//.test(ua)) browser = 'Edge';
+  else if (/OPR\//.test(ua)) browser = 'Opera';
+  else if (/CriOS\//.test(ua)) browser = 'Chrome (iOS)';
+  else if (/FxiOS\//.test(ua)) browser = 'Firefox (iOS)';
+  else if (/Chrome\//.test(ua) && !/Chromium/.test(ua)) browser = 'Chrome';
+  else if (/Firefox\//.test(ua)) browser = 'Firefox';
+  else if (/Safari\//.test(ua) && /Version\//.test(ua)) browser = 'Safari';
+
+  return { device, browser };
+}
+
+function parseReferrer() {
+  if (!document.referrer) return 'direct';
+  try {
+    const host = new URL(document.referrer).hostname.replace(/^www\./, '');
+    const known = {
+      'discord.com': 'Discord', 'discordapp.com': 'Discord',
+      'twitter.com': 'Twitter/X', 'x.com': 'Twitter/X',
+      'google.com': 'Google', 'instagram.com': 'Instagram',
+      'tiktok.com': 'TikTok', 'reddit.com': 'Reddit',
+      'youtube.com': 'YouTube', 'facebook.com': 'Facebook',
+      'github.com': 'GitHub'
+    };
+    return known[host] || host;
+  } catch (err) {
+    return 'direct';
+  }
+}
+
+function nextVisitCount() {
+  const key = 'websight_visit_count';
+  const n = (parseInt(localStorage.getItem(key) || '0', 10) || 0) + 1;
+  localStorage.setItem(key, n);
+  return n;
 }
 
 function prefersReducedMotion() {

@@ -504,10 +504,18 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
 /* ---------------- visitors ---------------- */
 document.getElementById('btn-refresh-visitors').addEventListener('click', loadVisitors);
 
+const DEVICE_ICONS = {
+  iPhone: '📱', iPad: '📱', 'Android phone': '📱', 'Android tablet': '📱',
+  Mac: '💻', 'Windows PC': '🖥️', 'Linux PC': '🖥️', Desktop: '🖥️'
+};
+const REFERRER_ICONS = {
+  Discord: '💬', 'Twitter/X': '🐦', Google: '🔍', Instagram: '📸',
+  TikTok: '🎵', Reddit: '👽', YouTube: '▶️', Facebook: '👤', GitHub: '🐙', direct: '🔗'
+};
+
 async function loadVisitors() {
   const status = document.getElementById('visitors-status');
-  const table = document.getElementById('visitor-table');
-  const tbody = document.getElementById('visitor-tbody');
+  const list = document.getElementById('visitor-list');
   status.textContent = 'loading…';
 
   try {
@@ -519,25 +527,56 @@ async function loadVisitors() {
     if (error) throw error;
 
     visitorsLoaded = true;
-    tbody.innerHTML = '';
-    data.forEach(row => {
-      const tr = document.createElement('tr');
-      const when = new Date(row.created_at).toLocaleString();
-      tr.innerHTML = `
-        <td>${escapeAttr(when)}</td>
-        <td>${escapeAttr(row.ip || '—')}</td>
-        <td>${escapeAttr(row.page || '—')}</td>
-        <td class="ua" title="${escapeAttr(row.user_agent || '')}">${escapeAttr(row.user_agent || '—')}</td>
-        <td><button class="locate-btn" type="button">locate</button></td>`;
-      tr.querySelector('.locate-btn').addEventListener('click', (e) => locateIp(row.ip, e.target));
-      tbody.appendChild(tr);
-    });
+    list.innerHTML = '';
 
-    table.hidden = data.length === 0;
-    status.textContent = data.length ? `${data.length} recent visit${data.length === 1 ? '' : 's'}.` : 'no visits logged yet.';
+    if (!data.length) {
+      list.innerHTML = '<div class="visitor-empty">no visits logged yet.</div>';
+      status.textContent = '';
+      return;
+    }
+
+    data.forEach(row => list.appendChild(buildVisitorCard(row)));
+    status.textContent = `${data.length} recent visit${data.length === 1 ? '' : 's'}.`;
   } catch (err) {
     status.textContent = 'could not load visitors: ' + err.message;
   }
+}
+
+function buildVisitorCard(row) {
+  const card = document.createElement('div');
+  card.className = 'visitor-card';
+
+  const deviceIcon = DEVICE_ICONS[row.device] || '🖥️';
+  const referrerIcon = REFERRER_ICONS[row.referrer] || '🔗';
+  const chips = [];
+  if (row.device || row.browser) chips.push(`${deviceIcon} ${escapeAttr([row.device, row.browser].filter(Boolean).join(' · '))}`);
+  if (row.referrer) chips.push(`${referrerIcon} ${escapeAttr(row.referrer)}`);
+  if (row.screen) chips.push(`🖼️ ${escapeAttr(row.screen)}`);
+  if (row.language || row.timezone) chips.push(`🌐 ${escapeAttr([row.language, row.timezone].filter(Boolean).join(' · '))}`);
+  if (row.page) chips.push(`📄 ${escapeAttr(row.page)}`);
+
+  card.innerHTML = `
+    <div class="visitor-top">
+      <span class="visitor-ip">${escapeAttr(row.ip || 'unknown ip')}</span>
+      ${row.visit_count ? `<span class="visit-badge">visit #${escapeAttr(row.visit_count)}</span>` : ''}
+      <span class="visitor-time" title="${escapeAttr(new Date(row.created_at).toLocaleString())}">${relativeTime(row.created_at)}</span>
+    </div>
+    <div class="visitor-meta">
+      ${chips.map(c => `<span class="meta-chip">${c}</span>`).join('')}
+    </div>
+    <button class="locate-btn" type="button">📍 locate</button>`;
+
+  card.querySelector('.locate-btn').addEventListener('click', (e) => locateIp(row.ip, e.target));
+  return card;
+}
+
+function relativeTime(iso) {
+  const seconds = Math.floor((Date.now() - new Date(iso).getTime()) / 1000);
+  if (seconds < 60) return 'just now';
+  if (seconds < 3600) return Math.floor(seconds / 60) + 'm ago';
+  if (seconds < 86400) return Math.floor(seconds / 3600) + 'h ago';
+  if (seconds < 2592000) return Math.floor(seconds / 86400) + 'd ago';
+  return new Date(iso).toLocaleDateString();
 }
 
 async function locateIp(ip, btn) {
@@ -548,7 +587,11 @@ async function locateIp(ip, btn) {
     const res = await fetch(`https://ipapi.co/${encodeURIComponent(ip)}/json/`);
     const json = await res.json();
     if (json.error) throw new Error(json.reason || 'lookup failed');
-    btn.outerHTML = escapeAttr([json.city, json.region, json.country_name].filter(Boolean).join(', ') || 'unknown');
+    const label = [json.city, json.region, json.country_name].filter(Boolean).join(', ') || 'unknown';
+    const span = document.createElement('span');
+    span.className = 'locate-result';
+    span.textContent = '📍 ' + label;
+    btn.replaceWith(span);
   } catch (err) {
     btn.textContent = 'failed';
     btn.disabled = false;
