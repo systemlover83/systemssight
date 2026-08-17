@@ -8,7 +8,7 @@
    as a real access control.
    ============================================================ */
 
-const PASSCODE_HASH = 'b1bd37cb57a9be422b0ef56b9e9be71098228ebc3cd344805183ce4d1d75b5ef';
+const PASSCODE_HASH = '554bdf2423a61d37ec20b8436631eed2fa2363f2e439d3d6cab6b7403ce3587f';
 const GH_OWNER = 'systemlover83';
 const GH_REPO = 'systemssight';
 const GH_BRANCH = 'master';
