@@ -38,7 +38,7 @@ const CONFIG = {
   },
 
   features: {
-    musicPlayer: { enabled: true, track: "assets/music.mp3", title: "sum41" },
+    musicPlayer: { enabled: true, track: "assets/music.mp3", title: "song" },
     typewriterBio: { enabled: true },
     customCursor: { enabled: true },
     particleBackground: { enabled: true },
