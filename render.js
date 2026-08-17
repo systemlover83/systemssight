@@ -6,14 +6,14 @@
    ============================================================ */
 
 const ICONS = {
-  discord: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="7" width="18" height="11" rx="5"/><circle cx="9" cy="12.5" r="1.4" fill="currentColor" stroke="none"/><circle cx="15" cy="12.5" r="1.4" fill="currentColor" stroke="none"/><path d="M8 7l1-2h6l1 2"/></svg>',
+  discord: '<svg viewBox="0 0 24 24" fill="currentColor"><rect x="4" y="8" width="16" height="11" rx="5.5"/><circle cx="6.5" cy="7" r="2.2"/><circle cx="17.5" cy="7" r="2.2"/><ellipse cx="9" cy="13.2" rx="1.3" ry="1.6" fill="var(--bg)"/><ellipse cx="15" cy="13.2" rx="1.3" ry="1.6" fill="var(--bg)"/></svg>',
   twitter: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 5l14 14M19 5L5 19"/></svg>',
   instagram: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3.5" y="3.5" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17" cy="7" r="1" fill="currentColor" stroke="none"/></svg>',
   tiktok: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M14 3c.3 2.1 1.8 3.6 4 3.9v2.6c-1.4 0-2.8-.4-4-1.2v6.4a5.3 5.3 0 1 1-5.3-5.3c.3 0 .5 0 .8.1v2.7a2.6 2.6 0 1 0 1.9 2.5V3h2.6z"/></svg>',
   github: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .3a12 12 0 00-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1.1-.7.1-.7.1-.7 1.2.1 1.9 1.2 1.9 1.2 1.1 1.9 2.8 1.3 3.5 1 .1-.8.4-1.3.8-1.6-2.7-.3-5.5-1.3-5.5-5.9 0-1.3.5-2.4 1.2-3.2-.1-.3-.5-1.5.1-3.2 0 0 1-.3 3.3 1.2.9-.3 2-.4 3-.4s2.1.1 3 .4c2.3-1.5 3.3-1.2 3.3-1.2.6 1.7.2 2.9.1 3.2.8.8 1.2 1.9 1.2 3.2 0 4.6-2.8 5.6-5.5 5.9.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0012 .3z"/></svg>',
   spotify: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9" stroke-width="1.6"/><path d="M7 10.5c3-1 7-.6 9.5.9M7.5 13.5c2.5-.8 5.7-.5 7.8.7M8 16.3c2-.6 4.5-.4 6.2.6"/></svg>',
   youtube: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="2.5" y="5.5" width="19" height="13" rx="4"/><path d="M10.5 9.3l5 2.7-5 2.7z" fill="currentColor" stroke="none"/></svg>',
-  steam: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><circle cx="9" cy="15" r="2"/><circle cx="15" cy="8" r="2.2"/><path d="M9 15l4.5-5.3"/></svg>',
+  steam: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="15.5" cy="8.3" r="3.2"/><circle cx="15.5" cy="8.3" r="1" fill="currentColor" stroke="none"/><circle cx="8.3" cy="15.7" r="3.4"/><circle cx="8.3" cy="15.7" r="1.3" fill="currentColor" stroke="none"/><path d="M13 10.7c-1.3 1.6-2.6 2.9-3.7 3.9" stroke-linecap="round"/></svg>',
   link: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M9 15l6-6"/><path d="M11 6.5l1-1a3.5 3.5 0 015 5l-1 1"/><path d="M13 17.5l-1 1a3.5 3.5 0 01-5-5l1-1"/></svg>',
   music: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 18a3 3 0 100-6 3 3 0 000 6zm10-14v11.5a3 3 0 11-2-2.83V6.7l-6 1.5v9.3a3 3 0 11-2-2.83V6l10-2.5V4z"/></svg>',
   play: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>',
