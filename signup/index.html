@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>sign up</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='45' fill='%23a855f7'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="../auth.css">
+</head>
+<body>
+<div class="center-shell">
+  <form id="signup-form" class="auth-box">
+    <h1>create account</h1>
+    <p class="sub dim">get your own page</p>
+
+    <label>username</label>
+    <input id="f-username" type="text" placeholder="lowercase, 3-20 chars" autocomplete="off" required>
+    <p id="username-hint" class="dim"></p>
+
+    <label>email</label>
+    <input id="f-email" type="email" autocomplete="email" required>
+
+    <label>password</label>
+    <input id="f-password" type="password" autocomplete="new-password" minlength="6" required>
+
+    <button type="submit" id="btn-submit">sign up</button>
+    <div id="msg" class="msg" hidden></div>
+
+    <p class="foot-link dim">already have an account? <a href="../login/">log in</a></p>
+  </form>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="../supabase-config.js"></script>
+<script src="../auth-helpers.js"></script>
+<script src="signup.js"></script>
+</body>
+</html>

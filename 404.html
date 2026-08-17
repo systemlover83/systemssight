@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>not found</title>
+<script>
+  // /u/<username> has no matching static file, so GitHub Pages serves this
+  // 404 for it. If the path looks like a profile url, hand off to the
+  // viewer with the username as a query param instead of a real redirect.
+  var m = location.pathname.match(/^\/u\/([a-zA-Z0-9_]+)\/?$/);
+  if (m) {
+    location.replace('/u/index.html?name=' + encodeURIComponent(m[1].toLowerCase()));
+  }
+</script>
+<style>
+  body { background:#05050a; color:#9ca0ad; font-family:system-ui,sans-serif; min-height:100vh; display:flex; align-items:center; justify-content:center; margin:0; }
+  a { color:#22d3ee; }
+</style>
+</head>
+<body>
+  <div style="text-align:center;">
+    <h1 style="color:#f4f4f7;">404</h1>
+    <p>this page doesn't exist.</p>
+    <p><a href="/">back home</a></p>
+  </div>
+</body>
+</html>
