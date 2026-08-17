@@ -262,10 +262,26 @@ async function initViewCounter(CONFIG) {
   const countEl = document.getElementById('view-count');
   wrap.hidden = false;
 
+  const sessionKey = `viewed:${cfg.namespace}`;
+  const alreadyCountedThisSession = sessionStorage.getItem(sessionKey);
+
   try {
-    const { data, error } = await supabaseClient.rpc('increment_view', { ns: cfg.namespace });
-    if (error) throw error;
-    countEl.textContent = Number(data).toLocaleString();
+    let count;
+    if (alreadyCountedThisSession) {
+      const { data, error } = await supabaseClient
+        .from('page_views')
+        .select('count')
+        .eq('namespace', cfg.namespace)
+        .maybeSingle();
+      if (error) throw error;
+      count = data?.count ?? 0;
+    } else {
+      const { data, error } = await supabaseClient.rpc('increment_view', { ns: cfg.namespace });
+      if (error) throw error;
+      count = data;
+      sessionStorage.setItem(sessionKey, '1');
+    }
+    countEl.textContent = Number(count).toLocaleString();
   } catch (err) {
     const key = `viewcount:${cfg.namespace}`;
     const local = (parseInt(localStorage.getItem(key) || '0', 10) || 0) + 1;
