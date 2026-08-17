@@ -19,9 +19,7 @@ const CONFIG = {
     accent: "#4dff00",
     accent2: "#000000",
     backgroundType: "video",
-    backgroundMedia: "assets/bg.mp4",
-    // "fade" | "slide-up" | "slide-down" | "zoom" | "flip" | "glitch" | "blur" | "wipe"
-    introAnimation: "fade"
+    backgroundMedia: "assets/bg.mp4"
   },
 
   socials: {
@@ -45,7 +43,6 @@ const CONFIG = {
     customCursor: { enabled: true },
     particleBackground: { enabled: true },
     viewCounter: { enabled: true, namespace: "systemlover-xyz-page" },
-    // Requires a password before the page shows. Set/change via /dev.
     pageLock: { enabled: false, passwordHash: "" }
   }
 };
