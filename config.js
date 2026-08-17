@@ -11,7 +11,8 @@ const CONFIG = {
     bio: "just the goat lowkey ",
     avatar: "assets/avatar.jpg",
     badges: [
-      { icon: "⚡", label: "owner" }
+      { icon: "⚡", label: "owner" },
+      { icon: "🤝", label: "Discord Verified" }
     ]
   },
 
