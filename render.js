@@ -263,10 +263,9 @@ async function initViewCounter(CONFIG) {
   wrap.hidden = false;
 
   try {
-    const res = await fetch(`https://api.countapi.xyz/hit/${encodeURIComponent(cfg.namespace)}/visits`);
-    if (!res.ok) throw new Error('counter api error');
-    const json = await res.json();
-    countEl.textContent = json.value.toLocaleString();
+    const { data, error } = await supabaseClient.rpc('increment_view', { ns: cfg.namespace });
+    if (error) throw error;
+    countEl.textContent = Number(data).toLocaleString();
   } catch (err) {
     const key = `viewcount:${cfg.namespace}`;
     const local = (parseInt(localStorage.getItem(key) || '0', 10) || 0) + 1;
