@@ -31,7 +31,14 @@
     </div>
   </header>
 
+  <div class="tabs">
+    <button type="button" class="tab-btn active" data-tab="editor">Editor</button>
+    <button type="button" class="tab-btn" data-tab="visitors">Visitors</button>
+  </div>
+
   <div id="status" class="status" hidden></div>
+
+  <div id="tab-editor" class="tab-content">
 
   <section class="panel">
     <h2>GitHub token</h2>
@@ -122,6 +129,7 @@
     <label class="toggle-row"><input id="f-cursor" type="checkbox"> Custom glowing cursor</label>
     <label class="toggle-row"><input id="f-particles" type="checkbox"> Particle background (only used if theme background type = particles)</label>
     <label class="toggle-row"><input id="f-viewcounter" type="checkbox"> View counter</label>
+    <label class="toggle-row"><input id="f-iplogging" type="checkbox"> Log visitor IPs (see Visitors tab)</label>
 
     <label class="toggle-row"><input id="f-music-enabled" type="checkbox"> Music player</label>
     <div id="music-fields" class="indent">
@@ -145,8 +153,29 @@
 
   <button id="btn-publish" class="btn-primary">save & publish</button>
   <p id="publish-log" class="dim"></p>
+
+  </div>
+
+  <div id="tab-visitors" class="tab-content" hidden>
+    <section class="panel">
+      <h2>Visitors</h2>
+      <p class="dim">IP, browser, and page logged on each visit to systemlover.xyz. Click a row's "locate" to look up its rough location on demand.</p>
+      <button id="btn-refresh-visitors" class="btn-secondary">refresh</button>
+      <p id="visitors-status" class="dim"></p>
+      <div class="visitor-table-wrap">
+        <table id="visitor-table" class="visitor-table" hidden>
+          <thead>
+            <tr><th>when</th><th>ip</th><th>page</th><th>browser</th><th></th></tr>
+          </thead>
+          <tbody id="visitor-tbody"></tbody>
+        </table>
+      </div>
+    </section>
+  </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="../supabase-config.js"></script>
 <script src="admin.js"></script>
 </body>
 </html>

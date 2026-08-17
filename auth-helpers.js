@@ -35,7 +35,8 @@ function defaultProfileConfig(username) {
       customCursor: { enabled: true },
       particleBackground: { enabled: true },
       viewCounter: { enabled: false, namespace: 'user-' + username },
-      pageLock: { enabled: false, passwordHash: '' }
+      pageLock: { enabled: false, passwordHash: '' },
+      ipLogging: { enabled: false }
     }
   };
 }

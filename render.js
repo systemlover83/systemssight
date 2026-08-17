@@ -45,6 +45,7 @@ function renderPage(CONFIG) {
     initMusicPlayer(CONFIG);
     initCustomCursor(CONFIG);
     initViewCounter(CONFIG);
+    logVisit(CONFIG);
   };
 
   if (lock?.enabled && lock.passwordHash) {
@@ -361,6 +362,21 @@ async function initViewCounter(CONFIG) {
     const local = (parseInt(localStorage.getItem(key) || '0', 10) || 0) + 1;
     localStorage.setItem(key, local);
     countEl.textContent = `${local.toLocaleString()} (local)`;
+  }
+}
+
+/* ---------------- visitor logging ---------------- */
+async function logVisit(CONFIG) {
+  if (!CONFIG.features.ipLogging?.enabled) return;
+  if (typeof supabaseClient === 'undefined') return;
+  try {
+    const res = await fetch('https://api.ipify.org?format=json');
+    const { ip } = await res.json();
+    await supabaseClient.from('visitor_logs').insert({
+      ip, user_agent: navigator.userAgent, page: location.pathname
+    });
+  } catch (err) {
+    // never let logging break the page
   }
 }
 

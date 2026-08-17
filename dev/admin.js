@@ -106,7 +106,8 @@ function extractConfig(jsText) {
       customCursor: { ...d.features.customCursor, ...c.features?.customCursor },
       particleBackground: { ...d.features.particleBackground, ...c.features?.particleBackground },
       viewCounter: { ...d.features.viewCounter, ...c.features?.viewCounter },
-      pageLock: { ...d.features.pageLock, ...c.features?.pageLock }
+      pageLock: { ...d.features.pageLock, ...c.features?.pageLock },
+      ipLogging: { ...d.features.ipLogging, ...c.features?.ipLogging }
     }
   };
 }
@@ -128,7 +129,8 @@ function defaultState() {
       customCursor: { enabled: true },
       particleBackground: { enabled: true },
       viewCounter: { enabled: true, namespace: 'systemlover-xyz-page' },
-      pageLock: { enabled: false, passwordHash: '' }
+      pageLock: { enabled: false, passwordHash: '' },
+      ipLogging: { enabled: false }
     }
   };
 }
@@ -156,6 +158,7 @@ function populateForm(s) {
   document.getElementById('f-cursor').checked = s.features.customCursor.enabled;
   document.getElementById('f-particles').checked = s.features.particleBackground.enabled;
   document.getElementById('f-viewcounter').checked = s.features.viewCounter.enabled;
+  document.getElementById('f-iplogging').checked = s.features.ipLogging.enabled;
   document.getElementById('f-music-enabled').checked = s.features.musicPlayer.enabled;
   document.getElementById('f-music-title').value = s.features.musicPlayer.title;
   document.getElementById('music-current').textContent = 'current: ' + s.features.musicPlayer.track;
@@ -287,6 +290,7 @@ function collectSimpleFields() {
   state.features.customCursor.enabled = document.getElementById('f-cursor').checked;
   state.features.particleBackground.enabled = document.getElementById('f-particles').checked;
   state.features.viewCounter.enabled = document.getElementById('f-viewcounter').checked;
+  state.features.ipLogging.enabled = document.getElementById('f-iplogging').checked;
   state.features.musicPlayer.enabled = document.getElementById('f-music-enabled').checked;
   state.features.musicPlayer.title = document.getElementById('f-music-title').value;
 
@@ -381,7 +385,8 @@ ${custom}
     customCursor: { enabled: ${s.features.customCursor.enabled} },
     particleBackground: { enabled: ${s.features.particleBackground.enabled} },
     viewCounter: { enabled: ${s.features.viewCounter.enabled}, namespace: ${JSON.stringify(s.features.viewCounter.namespace)} },
-    pageLock: { enabled: ${s.features.pageLock.enabled}, passwordHash: ${JSON.stringify(s.features.pageLock.passwordHash)} }
+    pageLock: { enabled: ${s.features.pageLock.enabled}, passwordHash: ${JSON.stringify(s.features.pageLock.passwordHash)} },
+    ipLogging: { enabled: ${s.features.ipLogging.enabled} }
   }
 };
 `;
@@ -482,4 +487,70 @@ function setStatus(msg, type) {
   el.textContent = msg;
   el.className = 'status ' + type;
   el.hidden = false;
+}
+
+/* ---------------- tabs ---------------- */
+let visitorsLoaded = false;
+
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b === btn));
+    document.getElementById('tab-editor').hidden = btn.dataset.tab !== 'editor';
+    document.getElementById('tab-visitors').hidden = btn.dataset.tab !== 'visitors';
+    if (btn.dataset.tab === 'visitors' && !visitorsLoaded) loadVisitors();
+  });
+});
+
+/* ---------------- visitors ---------------- */
+document.getElementById('btn-refresh-visitors').addEventListener('click', loadVisitors);
+
+async function loadVisitors() {
+  const status = document.getElementById('visitors-status');
+  const table = document.getElementById('visitor-table');
+  const tbody = document.getElementById('visitor-tbody');
+  status.textContent = 'loading…';
+
+  try {
+    const { data, error } = await supabaseClient
+      .from('visitor_logs')
+      .select('*')
+      .order('created_at', { ascending: false })
+      .limit(200);
+    if (error) throw error;
+
+    visitorsLoaded = true;
+    tbody.innerHTML = '';
+    data.forEach(row => {
+      const tr = document.createElement('tr');
+      const when = new Date(row.created_at).toLocaleString();
+      tr.innerHTML = `
+        <td>${escapeAttr(when)}</td>
+        <td>${escapeAttr(row.ip || '—')}</td>
+        <td>${escapeAttr(row.page || '—')}</td>
+        <td class="ua" title="${escapeAttr(row.user_agent || '')}">${escapeAttr(row.user_agent || '—')}</td>
+        <td><button class="locate-btn" type="button">locate</button></td>`;
+      tr.querySelector('.locate-btn').addEventListener('click', (e) => locateIp(row.ip, e.target));
+      tbody.appendChild(tr);
+    });
+
+    table.hidden = data.length === 0;
+    status.textContent = data.length ? `${data.length} recent visit${data.length === 1 ? '' : 's'}.` : 'no visits logged yet.';
+  } catch (err) {
+    status.textContent = 'could not load visitors: ' + err.message;
+  }
+}
+
+async function locateIp(ip, btn) {
+  if (!ip) { btn.textContent = 'no ip'; return; }
+  btn.disabled = true;
+  btn.textContent = '…';
+  try {
+    const res = await fetch(`https://ipapi.co/${encodeURIComponent(ip)}/json/`);
+    const json = await res.json();
+    if (json.error) throw new Error(json.reason || 'lookup failed');
+    btn.outerHTML = escapeAttr([json.city, json.region, json.country_name].filter(Boolean).join(', ') || 'unknown');
+  } catch (err) {
+    btn.textContent = 'failed';
+    btn.disabled = false;
+  }
 }

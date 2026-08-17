@@ -44,6 +44,8 @@ const CONFIG = {
     customCursor: { enabled: true },
     particleBackground: { enabled: true },
     viewCounter: { enabled: true, namespace: "systemlover-xyz-page" },
-    pageLock: { enabled: false, passwordHash: "" }
+    pageLock: { enabled: false, passwordHash: "" },
+    // Logs visitor IP/user-agent to Supabase on each page load. View in /dev.
+    ipLogging: { enabled: true }
   }
 };
