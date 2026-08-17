@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>systemlover — dev</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='45' fill='%23a855f7'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="admin.css">
+</head>
+<body>
+
+<!-- ===== gate ===== -->
+<div id="gate" class="gate">
+  <form id="gate-form" class="gate-box">
+    <h1>/dev</h1>
+    <p class="dim">enter passcode</p>
+    <input id="gate-input" type="password" autocomplete="off" autofocus>
+    <button type="submit">unlock</button>
+    <p id="gate-error" class="error" hidden>wrong code</p>
+  </form>
+</div>
+
+<!-- ===== editor ===== -->
+<div id="editor" class="editor" hidden>
+  <header class="topbar">
+    <h1>systemlover<span class="dim">/dev</span></h1>
+    <div class="topbar-actions">
+      <a href="/" target="_blank" class="btn-ghost">view live site ↗</a>
+      <button id="btn-logout" class="btn-ghost">lock</button>
+    </div>
+  </header>
+
+  <div id="status" class="status" hidden></div>
+
+  <section class="panel">
+    <h2>GitHub token</h2>
+    <p class="dim">Fine-grained personal access token, scoped to only this repo, with <b>Contents: Read and write</b> permission. Stored only in this browser.</p>
+    <div class="row">
+      <input id="gh-token" type="password" placeholder="github_pat_..." autocomplete="off">
+      <button id="btn-save-token" class="btn-secondary">save token</button>
+      <button id="btn-forget-token" class="btn-secondary">forget</button>
+    </div>
+    <p id="token-status" class="dim"></p>
+  </section>
+
+  <section class="panel">
+    <h2>Profile</h2>
+    <label>Display name</label>
+    <input id="f-displayName" type="text">
+
+    <label>Handle</label>
+    <input id="f-handle" type="text">
+
+    <label>Bio</label>
+    <textarea id="f-bio" rows="2"></textarea>
+
+    <label>Avatar</label>
+    <div class="row align-center">
+      <img id="avatar-preview" class="avatar-preview">
+      <input id="f-avatar-file" type="file" accept="image/*">
+    </div>
+
+    <label>Badges</label>
+    <div id="badges-list" class="dynamic-list"></div>
+    <button id="btn-add-badge" type="button" class="btn-secondary">+ add badge</button>
+  </section>
+
+  <section class="panel">
+    <h2>Theme</h2>
+    <div class="row">
+      <div>
+        <label>Accent color</label>
+        <input id="f-accent" type="color">
+      </div>
+      <div>
+        <label>Accent color 2</label>
+        <input id="f-accent2" type="color">
+      </div>
+    </div>
+
+    <label>Background type</label>
+    <select id="f-bgType">
+      <option value="particles">particles</option>
+      <option value="image">image</option>
+      <option value="video">video</option>
+      <option value="solid">solid</option>
+    </select>
+
+    <div id="bg-media-row" hidden>
+      <label>Background file</label>
+      <input id="f-bgMedia-file" type="file" accept="image/*,video/*">
+      <p id="bg-media-current" class="dim"></p>
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2>Socials</h2>
+    <div id="socials-presets" class="socials-grid"></div>
+
+    <label>Custom links</label>
+    <div id="custom-list" class="dynamic-list"></div>
+    <button id="btn-add-custom" type="button" class="btn-secondary">+ add custom link</button>
+  </section>
+
+  <section class="panel">
+    <h2>Features</h2>
+
+    <label class="toggle-row"><input id="f-typewriter" type="checkbox"> Typewriter bio animation</label>
+    <label class="toggle-row"><input id="f-cursor" type="checkbox"> Custom glowing cursor</label>
+    <label class="toggle-row"><input id="f-particles" type="checkbox"> Particle background (only used if theme background type = particles)</label>
+    <label class="toggle-row"><input id="f-viewcounter" type="checkbox"> View counter</label>
+
+    <label class="toggle-row"><input id="f-music-enabled" type="checkbox"> Music player</label>
+    <div id="music-fields" class="indent">
+      <label>Track title</label>
+      <input id="f-music-title" type="text">
+      <label>Track file (mp3)</label>
+      <input id="f-music-file" type="file" accept="audio/*">
+      <p id="music-current" class="dim"></p>
+    </div>
+  </section>
+
+  <button id="btn-publish" class="btn-primary">save & publish</button>
+  <p id="publish-log" class="dim"></p>
+</div>
+
+<script src="admin.js"></script>
+</body>
+</html>
