@@ -19,7 +19,7 @@ const ICON_OPTIONS = ['link', 'music', 'play', 'controller'];
 const PRESET_PLATFORMS = ['discord', 'twitter', 'instagram', 'tiktok', 'github', 'spotify', 'youtube', 'steam'];
 
 let state = null;       // populated from live config.js
-let pendingFiles = { avatar: null, backgroundMedia: null, musicTrack: null };
+let pendingFiles = { avatar: null, backgroundMedia: null, musicTrack: null, downloadFile: null };
 
 /* ---------------- passcode gate ---------------- */
 async function sha256Hex(text) {
@@ -215,6 +215,11 @@ document.getElementById('f-bgMedia-file').addEventListener('change', (e) => {
 });
 document.getElementById('f-music-file').addEventListener('change', (e) => {
   pendingFiles.musicTrack = e.target.files[0] || null;
+});
+document.getElementById('f-dl-file').addEventListener('change', (e) => {
+  pendingFiles.downloadFile = e.target.files[0] || null;
+  document.getElementById('dl-file-status').textContent = pendingFiles.downloadFile
+    ? `will upload "${pendingFiles.downloadFile.name}" as freeram/FreeRAM.exe on publish.` : '';
 });
 
 /* ---------------- badges ---------------- */
@@ -473,6 +478,10 @@ document.getElementById('btn-publish').addEventListener('click', async () => {
       await ghPutFile(path, await fileToBase64(pendingFiles.musicTrack), 'dev: update music track');
       state.features.musicPlayer.track = path;
     }
+    if (pendingFiles.downloadFile) {
+      log.textContent = 'uploading download file…';
+      await ghPutFile('freeram/FreeRAM.exe', await fileToBase64(pendingFiles.downloadFile), 'dev: update freeram download');
+    }
 
     log.textContent = 'publishing config.js…';
     const text = buildConfigJsText(state);
@@ -486,7 +495,8 @@ document.getElementById('btn-publish').addEventListener('click', async () => {
       await ghPutFile('index.html', b64EncodeUnicode(updatedHtml), 'dev: sync link preview');
     }
 
-    pendingFiles = { avatar: null, backgroundMedia: null, musicTrack: null };
+    pendingFiles = { avatar: null, backgroundMedia: null, musicTrack: null, downloadFile: null };
+    document.getElementById('dl-file-status').textContent = '';
     document.getElementById('lock-status').textContent = state.features.pageLock.passwordHash
       ? 'a password is currently set.' : 'no password set yet.';
     setStatus('published. live site will update in under a minute.', 'ok');

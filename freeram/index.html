@@ -26,12 +26,25 @@
   p { color: var(--text-dim); font-size: 14px; line-height: 1.6; margin-bottom: 18px; }
   a.back { color: var(--accent); text-decoration: none; font-size: 13px; }
   a.back:hover { text-decoration: underline; }
+  a.dl-btn {
+    display: block; margin: 0 auto 20px; max-width: 240px;
+    padding: 12px 20px; border-radius: 12px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    color: #fff; text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+    font-weight: 700; font-size: 14px; text-decoration: none;
+    box-shadow: 0 0 22px rgba(77,255,0,0.3);
+    transition: transform .18s ease, box-shadow .18s ease;
+  }
+  a.dl-btn:hover { transform: translateY(-2px); box-shadow: 0 0 30px rgba(77,255,0,0.5); }
+  .meta { font-size: 12px; color: var(--text-dim); margin-bottom: 22px; }
 </style>
 </head>
 <body>
   <div class="card">
     <h1>freeram</h1>
-    <p>the download isn't hooked up yet — nothing here to grab just yet.</p>
+    <p>a tiny utility that nudges Windows into trimming idle memory. no install, just run it.</p>
+    <a class="dl-btn" href="FreeRAM.exe" download="Free Ram.exe">⬇ download .exe</a>
+    <p class="meta">~62 KB · Windows · no installer</p>
     <a class="back" href="/">&larr; back to systemlover.xyz</a>
   </div>
 </body>
