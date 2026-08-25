@@ -167,7 +167,7 @@ body.cursor-active #cursor-ring.hover { width: 44px; height: 44px; opacity: 1; }
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
 }
-.avatar-wrap, #handle, .badges, .bio, .discord-presence, .socials, .view-counter {
+.avatar-wrap, #handle, .badges, .bio, .discord-presence, .socials, .download-btn, .view-counter {
   animation: elem-in .5s cubic-bezier(.2,.9,.3,1) both;
 }
 .avatar-wrap { animation-delay: .05s; }
@@ -175,6 +175,7 @@ body.cursor-active #cursor-ring.hover { width: 44px; height: 44px; opacity: 1; }
 .badges { animation-delay: .24s; }
 .bio { animation-delay: .30s; }
 .socials { animation-delay: .38s; }
+.download-btn { animation-delay: .42s; }
 .view-counter { animation-delay: .46s; }
 
 /* ---------- avatar ---------- */
@@ -231,6 +232,19 @@ body.cursor-active #cursor-ring.hover { width: 44px; height: 44px; opacity: 1; }
   box-shadow: 0 0 18px rgba(168,85,247,0.45);
 }
 .social-btn svg { width: 18px; height: 18px; }
+
+/* ---------- download button ---------- */
+.download-btn {
+  display: block; margin: 18px auto 0; width: 100%; max-width: 260px;
+  padding: 12px 20px; border-radius: 12px; text-align: center;
+  background: linear-gradient(90deg, var(--accent), var(--accent2));
+  color: #fff; text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+  font-weight: 700; font-size: 14px; text-decoration: none;
+  box-shadow: 0 0 22px rgba(168,85,247,0.35);
+  transition: transform .18s ease, box-shadow .18s ease;
+}
+.download-btn:hover { transform: translateY(-2px); box-shadow: 0 0 30px rgba(168,85,247,0.55); }
+.download-btn::before { content: '⬇ '; }
 
 /* ---------- view counter ---------- */
 .view-counter {

@@ -36,7 +36,8 @@ function defaultProfileConfig(username) {
       particleBackground: { enabled: true },
       viewCounter: { enabled: false, namespace: 'user-' + username },
       pageLock: { enabled: false, passwordHash: '' },
-      ipLogging: { enabled: false }
+      ipLogging: { enabled: false },
+      downloadButton: { enabled: false, label: 'download', url: '' }
     }
   };
 }

@@ -41,6 +41,7 @@ function renderPage(CONFIG) {
     applyTheme(CONFIG);
     renderProfile(CONFIG);
     renderSocials(CONFIG);
+    renderDownloadButton(CONFIG);
     initBackground(CONFIG);
     initMusicPlayer(CONFIG);
     initCustomCursor(CONFIG);
@@ -174,6 +175,26 @@ function makeSocialBtn(iconSvg, url, label) {
   a.setAttribute('aria-label', label);
   a.innerHTML = iconSvg;
   return a;
+}
+
+/* ---------------- download button ---------------- */
+function renderDownloadButton(CONFIG) {
+  const cfg = CONFIG.features.downloadButton;
+  const btn = document.getElementById('download-btn');
+  if (!btn) return;
+  if (!cfg?.enabled || !cfg.url) { btn.hidden = true; return; }
+
+  btn.href = cfg.url;
+  btn.textContent = cfg.label || 'download';
+  const isExternal = /^https?:\/\//i.test(cfg.url) && !cfg.url.includes(location.hostname);
+  if (isExternal) {
+    btn.target = '_blank';
+    btn.rel = 'noopener noreferrer';
+  } else {
+    btn.removeAttribute('target');
+    btn.removeAttribute('rel');
+  }
+  btn.hidden = false;
 }
 
 /* ---------------- background ---------------- */

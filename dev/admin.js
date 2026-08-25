@@ -107,7 +107,8 @@ function extractConfig(jsText) {
       particleBackground: { ...d.features.particleBackground, ...c.features?.particleBackground },
       viewCounter: { ...d.features.viewCounter, ...c.features?.viewCounter },
       pageLock: { ...d.features.pageLock, ...c.features?.pageLock },
-      ipLogging: { ...d.features.ipLogging, ...c.features?.ipLogging }
+      ipLogging: { ...d.features.ipLogging, ...c.features?.ipLogging },
+      downloadButton: { ...d.features.downloadButton, ...c.features?.downloadButton }
     }
   };
 }
@@ -130,7 +131,8 @@ function defaultState() {
       particleBackground: { enabled: true },
       viewCounter: { enabled: true, namespace: 'systemlover-xyz-page' },
       pageLock: { enabled: false, passwordHash: '' },
-      ipLogging: { enabled: false }
+      ipLogging: { enabled: false },
+      downloadButton: { enabled: false, label: 'download', url: '' }
     }
   };
 }
@@ -168,6 +170,11 @@ function populateForm(s) {
   document.getElementById('lock-status').textContent = s.features.pageLock.passwordHash
     ? 'a password is currently set.' : 'no password set yet.';
   toggleLockFields();
+
+  document.getElementById('f-dl-enabled').checked = s.features.downloadButton.enabled;
+  document.getElementById('f-dl-label').value = s.features.downloadButton.label;
+  document.getElementById('f-dl-url').value = s.features.downloadButton.url;
+  toggleDlFields();
 }
 
 function resolveAssetUrl(path) {
@@ -190,6 +197,11 @@ document.getElementById('f-lock-enabled').addEventListener('change', toggleLockF
 function toggleLockFields() {
   document.getElementById('lock-fields').style.display =
     document.getElementById('f-lock-enabled').checked ? 'block' : 'none';
+}
+document.getElementById('f-dl-enabled').addEventListener('change', toggleDlFields);
+function toggleDlFields() {
+  document.getElementById('dl-fields').style.display =
+    document.getElementById('f-dl-enabled').checked ? 'block' : 'none';
 }
 
 document.getElementById('f-avatar-file').addEventListener('change', (e) => {
@@ -295,6 +307,10 @@ function collectSimpleFields() {
   state.features.musicPlayer.title = document.getElementById('f-music-title').value;
 
   state.features.pageLock.enabled = document.getElementById('f-lock-enabled').checked;
+
+  state.features.downloadButton.enabled = document.getElementById('f-dl-enabled').checked;
+  state.features.downloadButton.label = document.getElementById('f-dl-label').value;
+  state.features.downloadButton.url = document.getElementById('f-dl-url').value;
 }
 
 /* ---------------- GitHub Contents API ---------------- */
@@ -386,7 +402,8 @@ ${custom}
     particleBackground: { enabled: ${s.features.particleBackground.enabled} },
     viewCounter: { enabled: ${s.features.viewCounter.enabled}, namespace: ${JSON.stringify(s.features.viewCounter.namespace)} },
     pageLock: { enabled: ${s.features.pageLock.enabled}, passwordHash: ${JSON.stringify(s.features.pageLock.passwordHash)} },
-    ipLogging: { enabled: ${s.features.ipLogging.enabled} }
+    ipLogging: { enabled: ${s.features.ipLogging.enabled} },
+    downloadButton: { enabled: ${s.features.downloadButton.enabled}, label: ${JSON.stringify(s.features.downloadButton.label)}, url: ${JSON.stringify(s.features.downloadButton.url)} }
   }
 };
 `;
