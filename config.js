@@ -46,6 +46,6 @@ const CONFIG = {
     viewCounter: { enabled: true, namespace: "systemlover-xyz-page" },
     pageLock: { enabled: false, passwordHash: "" },
     ipLogging: { enabled: true },
-    downloadButton: { enabled: true, label: "download", url: "/freeram" }
+    downloadButton: { enabled: false, label: "download", url: "/freeram" }
   }
 };
