@@ -168,10 +168,8 @@
 
   <section class="panel">
     <h2>Frame Capture page</h2>
-    <p class="dim">The standalone /FrameCapture page has its own look and its own download button — unrelated to the config above.</p>
-    <label>File served at /FrameCapture (uploaded from your browser, using your own GitHub token)</label>
-    <input id="f-fc-file" type="file">
-    <p id="fc-file-status" class="dim"></p>
+    <p class="dim">The standalone /FrameCapture page has its own look and its own download button — unrelated to the config above. The APK is too large for this uploader (GitHub's Contents API tops out well under its size), so it isn't hosted here.</p>
+    <p class="dim">To publish a new version: create a <a href="https://github.com/systemlover83/frame/releases/new" target="_blank" rel="noopener">GitHub Release</a> on the dedicated frame repo, attach the .apk there, then update the download link in FrameCapture/index.html to the new release asset URL.</p>
   </section>
 
   <button id="btn-publish" class="btn-primary">save & publish</button>

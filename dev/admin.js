@@ -19,7 +19,7 @@ const ICON_OPTIONS = ['link', 'music', 'play', 'controller'];
 const PRESET_PLATFORMS = ['discord', 'twitter', 'instagram', 'tiktok', 'github', 'spotify', 'youtube', 'steam'];
 
 let state = null;       // populated from live config.js
-let pendingFiles = { avatar: null, backgroundMedia: null, musicTrack: null, downloadFile: null, frameCaptureFile: null };
+let pendingFiles = { avatar: null, backgroundMedia: null, musicTrack: null, downloadFile: null };
 
 /* ---------------- passcode gate ---------------- */
 async function sha256Hex(text) {
@@ -221,12 +221,6 @@ document.getElementById('f-dl-file').addEventListener('change', (e) => {
   document.getElementById('dl-file-status').textContent = pendingFiles.downloadFile
     ? `will upload "${pendingFiles.downloadFile.name}" as freeram/FreeRAM.exe on publish.` : '';
 });
-document.getElementById('f-fc-file').addEventListener('change', (e) => {
-  pendingFiles.frameCaptureFile = e.target.files[0] || null;
-  document.getElementById('fc-file-status').textContent = pendingFiles.frameCaptureFile
-    ? `will upload "${pendingFiles.frameCaptureFile.name}" as FrameCapture/FrameCapture.apk on publish.` : '';
-});
-
 /* ---------------- badges ---------------- */
 function renderBadges() {
   const wrap = document.getElementById('badges-list');
@@ -487,11 +481,6 @@ document.getElementById('btn-publish').addEventListener('click', async () => {
       log.textContent = 'uploading download file…';
       await ghPutFile('freeram/FreeRAM.exe', await fileToBase64(pendingFiles.downloadFile), 'dev: update freeram download');
     }
-    if (pendingFiles.frameCaptureFile) {
-      log.textContent = 'uploading Frame Capture file…';
-      await ghPutFile('FrameCapture/FrameCapture.apk', await fileToBase64(pendingFiles.frameCaptureFile), 'dev: update FrameCapture download');
-    }
-
     log.textContent = 'publishing config.js…';
     const text = buildConfigJsText(state);
     await ghPutFile('config.js', b64EncodeUnicode(text), 'dev: update profile config');
@@ -504,9 +493,8 @@ document.getElementById('btn-publish').addEventListener('click', async () => {
       await ghPutFile('index.html', b64EncodeUnicode(updatedHtml), 'dev: sync link preview');
     }
 
-    pendingFiles = { avatar: null, backgroundMedia: null, musicTrack: null, downloadFile: null, frameCaptureFile: null };
+    pendingFiles = { avatar: null, backgroundMedia: null, musicTrack: null, downloadFile: null };
     document.getElementById('dl-file-status').textContent = '';
-    document.getElementById('fc-file-status').textContent = '';
     document.getElementById('lock-status').textContent = state.features.pageLock.passwordHash
       ? 'a password is currently set.' : 'no password set yet.';
     setStatus('published. live site will update in under a minute.', 'ok');
