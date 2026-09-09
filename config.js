@@ -6,10 +6,10 @@
  */
 const CONFIG = {
   profile: {
-    displayName: "system",
-    handle: "@system",
+    displayName: "OCYCOCKY",
+    handle: "OCYCOCKY",
     bio: "just the goat lowkey ",
-    avatar: "assets/avatar.jpg",
+    avatar: "assets/avatar.png",
     badges: [
 
     ]
